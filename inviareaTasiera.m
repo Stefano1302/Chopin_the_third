@@ -51,4 +51,5 @@ end
 disp(msgArray);
 midisend(device,msgArray);
 
+
  

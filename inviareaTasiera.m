@@ -1,3 +1,4 @@
+clear all
 device=mididevice("CASIO USB-MIDI");
 readme = fopen('starwars.mid');
 [readOut, byteCount] = fread(readme);
@@ -6,8 +7,7 @@ channel = 1;
  note = 23;
  velocity = 127;
  msg = midimsg('NoteOn',channel,note,velocity);
- midisend(device,msg)
-release(device);
+ 
 %receivedMessages = midireceive(device)
 chunkIndex = 14;     % Header chunk is always 14 bytes
 ts = 0;              % Timestamp - Starts at zero
@@ -48,6 +48,7 @@ while chunkIndex < byteCount
     % Push chunkIndex to next track chunk
     chunkIndex = chunkIndex+chunkLength;
 end
-disp(msgArray)
+disp(msgArray);
+midisend(device,msgArray);
 
  

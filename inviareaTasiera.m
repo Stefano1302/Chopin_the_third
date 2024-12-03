@@ -3,9 +3,11 @@ readme = fopen('starwars.mid');
 [readOut, byteCount] = fread(readme);
 fclose(readme); 
 channel = 1;
- note = 60;
+ note = 23;
  velocity = 127;
  msg = midimsg('NoteOn',channel,note,velocity);
+ midisend(device,msg)
+release(device);
 %receivedMessages = midireceive(device)
 chunkIndex = 14;     % Header chunk is always 14 bytes
 ts = 0;              % Timestamp - Starts at zero
@@ -47,5 +49,5 @@ while chunkIndex < byteCount
     chunkIndex = chunkIndex+chunkLength;
 end
 disp(msgArray)
-midisend(device,msgArray)
+
  

@@ -12,7 +12,6 @@ channel = 1;
 chunkIndex = 14;     % Header chunk is always 14 bytes
 ts = 0;              % Timestamp - Starts at zero
 BPM = 120;                  
-msgArray = [];
 ticksPerQNote=4;
 % Parse track chunks in outer loop
 while chunkIndex < byteCount
@@ -36,11 +35,10 @@ while chunkIndex < byteCount
         % Extract relevant data - Create midimsg object
         [ts,msg] = createMessage(message,ts,deltaTime,ticksPerQNote,BPM);
         % Add midimsg to msgArray
-        %if(~isempty(msg))
-         %  msg.Channel=1;
-        %end
-        msgArray = [msgArray;msg];
-        
+        if(~isempty(msg))
+         midisend(device,msg);
+        end
+        pause(0.01)
         % Push pointer to next MIDI message
         ptr = ptr+messageLen;
     end
@@ -48,8 +46,6 @@ while chunkIndex < byteCount
     % Push chunkIndex to next track chunk
     chunkIndex = chunkIndex+chunkLength;
 end
-disp(msgArray);
-midisend(device,msgArray);
 
 
  

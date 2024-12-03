@@ -12,6 +12,7 @@ while toc(startTime) < duration
     end
     pause(0.01); % Small pause to prevent overloading the CPU
 end
+clear device
 %ritmo=timestamps(1,2:end)-timestamps(1,1:(end-1))
 % 
 % % Process midiMessages as needed

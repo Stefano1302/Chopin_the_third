@@ -7,7 +7,7 @@ channel = 1;
  note = 23;
  velocity = 127;
  msg = midimsg('NoteOn',channel,note,velocity);
- 
+ midisend(device,msg);
 %receivedMessages = midireceive(device)
 chunkIndex = 14;     % Header chunk is always 14 bytes
 ts = 0;              % Timestamp - Starts at zero
@@ -38,7 +38,7 @@ while chunkIndex < byteCount
         if(~isempty(msg))
          midisend(device,msg);
         end
-        pause(0.01)
+        pause(0.1)
         % Push pointer to next MIDI message
         ptr = ptr+messageLen;
     end

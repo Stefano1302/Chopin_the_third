@@ -1,7 +1,7 @@
 clear all
 device=mididevice("CASIO USB-MIDI");
 startTime = tic; % Start timer
-duration = 90; % Duration in seconds
+duration = 360; % Duration in seconds
 velocity=[];
 timestamps=[];
 midiMessages=[];
@@ -20,10 +20,11 @@ while toc(startTime) < duration
             if(i==1) 
                 startimestamp=midiMessage.Timestamp
             end
-            timestamps=[timestamps,lastTimeStamp-startimestamp]
+            timestamprelativo=lastTimeStamp
+            timestamps=[timestamps,timestamprelativo]
             velocity=[velocity;midiMessage.Velocity];
             plot(timestamps,velocity,'-*');
-            xlim([lastTimeStamp-range,lastTimeStamp+range])
+            xlim([timestamprelativo-range,timestamprelativo+range])
             ylim([0,127])
         end
       end

@@ -10,12 +10,13 @@ for i = 1:length(midiMessages)
         startimestamp=midiMessage.Timestamp
     end
     lastimestamp=midiMessage.Timestamp;
-    timestamps=[timestamps,lastimestamp-startimestamp]
+    timestamprelativo=lastimestamp-startimestamp;
+    timestamps=[timestamps,timestamprelativo]
     velocity=[velocity;midiMessage.Velocity];
     plot(timestamps,velocity,'-*',Color="#ff0000");
-    xlim([lastimestamp-(2*range),lastimestamp+(range/2)])
+    xlim([timestamprelativo-(2*range),timestamprelativo+(range/2)])
     ylim([0,127])
-    pause(0.01)
+    pause(0.005)
     end
 end
 end

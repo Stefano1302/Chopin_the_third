@@ -11,5 +11,5 @@ for i = 1:length(midiMessages)
     result=[result;str]
     end
 end
-writematrix(result,"datiraccolti/"+nomeFile+".csv");
+writematrix(result,"datiraccolti/csv/"+nomeFile+".csv");
 end

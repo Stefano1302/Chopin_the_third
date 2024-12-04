@@ -5,7 +5,7 @@ duration = 360; % Duration in seconds
 velocity=[];
 timestamps=[];
 midiMessages=[];
-range=10;
+range=5;
 lastTimeStamp=0;
 startimestamp=0;
 while toc(startTime) < duration

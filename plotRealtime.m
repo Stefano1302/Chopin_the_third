@@ -5,6 +5,9 @@ duration = 90; % Duration in seconds
 velocity=[];
 timestamps=[];
 midiMessages=[];
+range=10;
+lastTimeStamp=0;
+oldtimestamp=0;
 while toc(startTime) < duration
  msg = midireceive(device);
     if ~isempty(msg)
@@ -13,11 +16,16 @@ while toc(startTime) < duration
       for i = 1:length(msg)
         midiMessage=msg(i);
         if(midiMessage.Type ~= "ControlChange" && midiMessage.Type == "NoteOn")
-            timestamps=[timestamps,midiMessage.Timestamp]
+            lastTimeStamp=midiMessage.Timestamp
+            if(i==1) 
+                oldtimestamp=midiMessage.Timestamp
+            end
+            timestamps=[timestamps,lastTimeStamp-oldtimestamp]
+            velocity=[velocity;midiMessage.Velocity];
             velocity=[velocity;midiMessage.Velocity];
             plot(timestamps,velocity,'-*');
-            %xlim([timestamps(end)-range,timestamps(end)])
-            ylim([20,140])
+            xlim([lastTimeStamp-range,lastTimeStamp+range])
+            ylim([0,127])
         end
       end
     end

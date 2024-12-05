@@ -1,7 +1,8 @@
 clear all
 device=mididevice("CASIO USB-MIDI");
 startTime = tic; % Start timer
-duration = 90; % Duration in seconds
+duration = 90;% Duration in seconds
+threshold=20;
 velocity=[];
 timestamps=[];
 midiMessages=createArray(10000,1,"midimsg");
@@ -26,18 +27,23 @@ while toc(startTime) < duration
             lastTimeStamp=midiMessage.Timestamp;
             if(k==1) 
                 startimestamp=midiMessage.Timestamp;
+                timestamprelativo=lastTimeStamp-startimestamp;
+                precendentetimestamprelativo=timestamprelativo;
             end
-            timestamprelativo=lastTimeStamp-startimestamp;
             %set(h, 'XData', [get(h, 'XData'), timestamprelativo], 'YData', [get(h, 'YData'), midiMessage.Velocity]);
             %xlim([timestamprelativo-range,timestamprelativo+range]);
-            if(k>1)
+            else if(k>1)
+                timestamprelativo=lastTimeStamp-startimestamp;
                 delta=timestamprelativo-precendentetimestamprelativo;
                 bpm=(1/delta);
+                if(bpm<threshold)
                 set(h, 'XData', [get(h, 'XData'), timestamprelativo], 'YData', [get(h, 'YData'), bpm],Color="#ff0000");
-                ylim([0,1]);
+                xlim([timestamprelativo-range,timestamprelativo+range]);
+                ylim([0,threshold]);
+                drawnow;
+                precendentetimestamprelativo=timestamprelativo;
+                end
             end
-            drawnow;
-            precendentetimestamprelativo=timestamprelativo;
             k=k+1;
         end
         j=j+1;

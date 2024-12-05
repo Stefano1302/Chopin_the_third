@@ -1,8 +1,8 @@
 clear all
 device=mididevice("CASIO USB-MIDI");
 startTime = tic; % Start timer
-duration = 90;% Duration in seconds
-threshold=20;
+duration = 360;% Duration in seconds
+threshold=0.1;
 velocity=[];
 timestamps=[];
 midiMessages=createArray(10000,1,"midimsg");
@@ -15,33 +15,35 @@ h=plot(NaN,NaN,'-*');
 ylim([0,127]);
 k=1;
 j=1;
+v=1;
 bpm=1;
 while toc(startTime) < duration
  msg = midireceive(device);
     if ~isempty(msg)
       for i = 1:length(msg)
         midiMessage=msg(i);
-        disp(midiMessage);
-        midiMessages(j,1)=midiMessage;
+        %disp(midiMessage);
+        %midiMessages(j,1)=midiMessage;
         if(midiMessage.Type ~= "ControlChange" && midiMessage.Type == "NoteOn")
             lastTimeStamp=midiMessage.Timestamp;
             if(k==1) 
                 startimestamp=midiMessage.Timestamp;
-                timestamprelativo=lastTimeStamp-startimestamp;
+                timestamprelativo=lastTimeStamp;
                 precendentetimestamprelativo=timestamprelativo;
-            end
-            %set(h, 'XData', [get(h, 'XData'), timestamprelativo], 'YData', [get(h, 'YData'), midiMessage.Velocity]);
-            %xlim([timestamprelativo-range,timestamprelativo+range]);
-            else if(k>1)
-                timestamprelativo=lastTimeStamp-startimestamp;
+                v=v+1;
+            elseif(k>1)
+                timestamprelativo=lastTimeStamp;
                 delta=timestamprelativo-precendentetimestamprelativo;
+                if(delta>threshold)
                 bpm=(1/delta);
-                if(bpm<threshold)
-                set(h, 'XData', [get(h, 'XData'), timestamprelativo], 'YData', [get(h, 'YData'), bpm],Color="#ff0000");
-                xlim([timestamprelativo-range,timestamprelativo+range]);
-                ylim([0,threshold]);
+                set(h, 'XData', [get(h, 'XData'), v], 'YData', [get(h, 'YData'), bpm],Color="#ff0000");
+                xlim([v-range,v+range]);
+                ylim([0,20]);
                 drawnow;
                 precendentetimestamprelativo=timestamprelativo;
+                v=v+1;
+                elseif(delta <= threshold)
+                    disp(delta);
                 end
             end
             k=k+1;
@@ -49,6 +51,6 @@ while toc(startTime) < duration
         j=j+1;
       end
     end
-    pause(0.01); % Small pause to prevent overloading the CPU
+    pause(0.001); % Small pause to prevent overloading the CPU
 end
 clear device

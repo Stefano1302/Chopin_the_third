@@ -4,29 +4,33 @@ startTime = tic; % Start timer
 duration = 90; % Duration in seconds
 velocity=[];
 timestamps=[];
-midiMessages=[];
+midiMessages=createArray(10000,1,"midimsg");
 range=5;
 lastTimeStamp=0;
 startimestamp=0;
 h=plot(NaN,NaN,'-*');
- ylim([0,127]);
+ylim([0,127]);
+k=1;
+j=1;
 while toc(startTime) < duration
  msg = midireceive(device);
     if ~isempty(msg)
-        disp(msg);
-        midiMessages=[midiMessages;msg];
       for i = 1:length(msg)
         midiMessage=msg(i);
+        disp(midiMessage);
+        midiMessages(j,1)=midiMessage;
         if(midiMessage.Type ~= "ControlChange" && midiMessage.Type == "NoteOn")
             lastTimeStamp=midiMessage.Timestamp;
-            if(i==1) 
+            if(k==1) 
                 startimestamp=midiMessage.Timestamp;
             end
-            timestamprelativo=lastTimeStamp;
+            timestamprelativo=lastTimeStamp-startimestamp;
             set(h, 'XData', [get(h, 'XData'), timestamprelativo], 'YData', [get(h, 'YData'), midiMessage.Velocity]);
             xlim([timestamprelativo-range,timestamprelativo+range]);
             drawnow;
+            k=k+1;
         end
+        j=j+1;
       end
     end
     pause(0.01); % Small pause to prevent overloading the CPU

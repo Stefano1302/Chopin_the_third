@@ -5,9 +5,9 @@ startTime = tic; % Start timer
 duration = 360;% Duration in seconds
 threshold=0.1;
 modulo=1;
-midiMessages=createArray(10000,1,"midimsg");
 range=5;
 %end configuration
+midiMessages=createArray(10000,1,"midimsg");
 lastTimeStamp=0;
 startimestamp=0;
 precendentetimestamprelativo=0;

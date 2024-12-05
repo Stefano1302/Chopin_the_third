@@ -1,13 +1,13 @@
 clear all
 device=mididevice("CASIO USB-MIDI");
 startTime = tic; % Start timer
+%start configuration
 duration = 360;% Duration in seconds
 threshold=0.1;
-modulo=3;
-velocity=[];
-timestamps=[];
+modulo=1;
 midiMessages=createArray(10000,1,"midimsg");
 range=5;
+%end configuration
 lastTimeStamp=0;
 startimestamp=0;
 precendentetimestamprelativo=0;
@@ -17,7 +17,6 @@ ylim([0,127]);
 k=1;
 j=1;
 v=1;
-bpm=1;
 while toc(startTime) < duration
  msg = midireceive(device);
     if ~isempty(msg)
@@ -37,8 +36,8 @@ while toc(startTime) < duration
                 delta=timestamprelativo-precendentetimestamprelativo;
                 if(delta>threshold)
                     if(mod(v,modulo)==0)
-                    bpm=(1/delta);
-                    set(h, 'XData', [get(h, 'XData'), v/modulo], 'YData', [get(h, 'YData'), bpm],Color="#ff0000");
+                    bps=(1/delta);
+                    set(h, 'XData', [get(h, 'XData'), v/modulo], 'YData', [get(h, 'YData'), bps],Color="#ff0000");
                     xlim([(v/modulo)-range,(v/modulo)+range]);
                     ylim([0,20]);
                     drawnow;

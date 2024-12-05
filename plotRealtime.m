@@ -34,7 +34,7 @@ while toc(startTime) < duration
                 delta=timestamprelativo-precendentetimestamprelativo;
                 bpm=(1/delta);
                 set(h, 'XData', [get(h, 'XData'), timestamprelativo], 'YData', [get(h, 'YData'), bpm],Color="#ff0000");
-                %ylim([0,1]);
+                ylim([0,1]);
             end
             drawnow;
             precendentetimestamprelativo=timestamprelativo;

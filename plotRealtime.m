@@ -8,10 +8,13 @@ midiMessages=createArray(10000,1,"midimsg");
 range=5;
 lastTimeStamp=0;
 startimestamp=0;
+precendentetimestamprelativo=0;
+delta=0;
 h=plot(NaN,NaN,'-*');
 ylim([0,127]);
 k=1;
 j=1;
+bpm=1;
 while toc(startTime) < duration
  msg = midireceive(device);
     if ~isempty(msg)
@@ -25,9 +28,16 @@ while toc(startTime) < duration
                 startimestamp=midiMessage.Timestamp;
             end
             timestamprelativo=lastTimeStamp-startimestamp;
-            set(h, 'XData', [get(h, 'XData'), timestamprelativo], 'YData', [get(h, 'YData'), midiMessage.Velocity]);
-            xlim([timestamprelativo-range,timestamprelativo+range]);
+            %set(h, 'XData', [get(h, 'XData'), timestamprelativo], 'YData', [get(h, 'YData'), midiMessage.Velocity]);
+            %xlim([timestamprelativo-range,timestamprelativo+range]);
+            if(k>1)
+                delta=timestamprelativo-precendentetimestamprelativo;
+                bpm=(1/delta);
+                set(h, 'XData', [get(h, 'XData'), timestamprelativo], 'YData', [get(h, 'YData'), bpm],Color="#ff0000");
+                %ylim([0,1]);
+            end
             drawnow;
+            precendentetimestamprelativo=timestamprelativo;
             k=k+1;
         end
         j=j+1;
